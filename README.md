@@ -1,9 +1,10 @@
-# Task Manager App ![img.png](app_icon.png)
+# Task Manager App [ic_launcher.xml](app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml)
 
 This project is made for `ES APP DEV 2404` course
 in [Creative IT Institute]("https://www.creativeitinstitute.com/).
 
 In order to use Material Dynamic color this code has been added:
+
 ```bash
 class MyApp : Application() {
 override fun onCreate() {
@@ -27,9 +28,11 @@ compile it is just a warning.
 
 ## Installation
 
-You will need a computer with properly installed [Android Studio](#) if you want to build this app
+You will need a computer with properly
+installed [Android Studio](https://developer.android.com/studio) if you want to build this app
 yourself.
-If you just want to try the app you can download latest apk package [here](#)
+If you just want to try the app you can download latest apk
+package [here](https://github.com/abusaeed-shuvo/Task-Manager-App)
 
 ### Install the app from Android Studio:
 

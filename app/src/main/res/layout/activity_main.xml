@@ -15,7 +15,6 @@
 		android:background = "?attr/colorPrimary"
 		android:elevation = "10dp"
 		android:padding = "10dp"
-		android:text = "Tasks"
 		android:textAlignment = "center"
 		android:textColor = "?attr/colorOnPrimary"
 		android:textAppearance = "@style/TextAppearance.Material3.TitleLarge"
@@ -41,7 +40,7 @@
 			android:id = "@+id/input_search"
 			android:layout_margin = "10dp"
 
-			android:hint = "Search:"
+			android:hint = "@string/search"
 			app:endIconDrawable = "@drawable/ic_close"
 			app:endIconMode = "clear_text">
 
@@ -58,7 +57,7 @@
 			android:layout_width = "match_parent"
 			android:layout_height = "wrap_content"
 			android:layout_margin = "10dp"
-			android:hint = "Sort By:">
+			android:hint = "@string/sort_by">
 
 			<AutoCompleteTextView
 				android:id = "@+id/dropdown_sort_menu"
@@ -66,11 +65,10 @@
 				android:layout_width = "match_parent"
 				android:layout_height = "wrap_content"
 				android:clickable = "true"
-				android:contentDescription = "Sort by"
+				android:hint = "@string/sort_by"
 				android:focusable = "false"
 				android:importantForAccessibility = "no"
 				android:inputType = "none"
-				android:text = "Due Date"
 				android:textAppearance = "@style/TextAppearance.Material3.TitleMedium" />
 
 		</com.google.android.material.textfield.TextInputLayout>
@@ -99,7 +97,7 @@
 				android:layout_width = "match_parent"
 				android:layout_height = "match_parent"
 				android:gravity = "center"
-				android:text = "There is no data here"
+				android:text = "@string/there_is_no_data_here"
 				android:textAlignment = "center"
 				android:textAppearance = "@style/TextAppearance.Material3.TitleMedium"
 				android:visibility = "gone" />
@@ -119,7 +117,7 @@
 		android:layout_width = "wrap_content"
 		android:layout_height = "wrap_content"
 		android:layout_margin = "15dp"
-		android:text = "Add Task"
+		android:text = "@string/add_task"
 		app:icon = "@drawable/ic_add"
 		app:layout_constraintBottom_toBottomOf = "parent"
 		app:layout_constraintEnd_toEndOf = "parent" />
