@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
@@ -44,10 +45,29 @@ class MainActivity : AppCompatActivity(), TaskListAdapter.ClickHandler {
 		).allowMainThreadQueries().build()
 
 		taskDao = db.taskDao()
+
+
 		setupRecyclerviewWithAdapter()
 
 		updateTitleBar()
-		setupSortMenu(taskDao)
+		setupSortMenu(taskDao.getAllTask())
+
+		binding.inputSearch.editText?.doAfterTextChanged { editText ->
+			val allTasks = taskDao.getAllTask()
+			val input = editText.toString()
+			val filteredTasks = if (input.isNotEmpty()) {
+				allTasks.filter {
+					it.title.contains(input, ignoreCase = true) || it.description.contains(
+						input,
+						ignoreCase = true
+					)
+				}
+			} else allTasks
+
+			adapter.updateList(getSortedTasks(filteredTasks, currentSortType))
+
+			checkEmptyState(filteredTasks)
+		}
 
 
 		binding.apply {
@@ -64,7 +84,7 @@ class MainActivity : AppCompatActivity(), TaskListAdapter.ClickHandler {
 					}
 
 					adapter.clearSelection()
-					val updatedList = getSortedTasks(taskDao, currentSortType)
+					val updatedList = getSortedTasks(taskDao.getAllTask(), currentSortType)
 					adapter.updateList(updatedList)
 					checkEmptyState(updatedList)
 					updateTitleBar()
@@ -88,7 +108,7 @@ class MainActivity : AppCompatActivity(), TaskListAdapter.ClickHandler {
 		})
 	}
 
-	private fun setupSortMenu(taskDao: TaskDao) {
+	private fun setupSortMenu(allTasks: List<Task>) {
 		val sortOptions = TaskSortTypes.entries.map { it.value }
 		val dropdownView = binding.dropdownSortMenu
 
@@ -96,7 +116,7 @@ class MainActivity : AppCompatActivity(), TaskListAdapter.ClickHandler {
 		dropdownView.setAdapter(dropdownAdapter)
 
 		val defaultSort = TaskSortTypes.DUE_DATE
-		val sortedList = getSortedTasks(taskDao, defaultSort)
+		val sortedList = getSortedTasks(allTasks, defaultSort)
 		dropdownView.setText(defaultSort.value, false)
 		adapter.updateList(sortedList)
 		checkEmptyState(sortedList)
@@ -104,15 +124,15 @@ class MainActivity : AppCompatActivity(), TaskListAdapter.ClickHandler {
 		dropdownView.setOnItemClickListener { _, _, position, _ ->
 			val selectedSort = TaskSortTypes.entries[position]
 			currentSortType = selectedSort
-			val sortedList = getSortedTasks(taskDao, currentSortType)
+			val sortedList = getSortedTasks(allTasks, currentSortType)
 			adapter.updateList(sortedList)
 			checkEmptyState(sortedList)
 		}
 
 	}
 
-	private fun getSortedTasks(taskDao: TaskDao, sortType: TaskSortTypes): List<Task> {
-		val allTasks = taskDao.getAllTask()
+	private fun getSortedTasks(allTasks: List<Task>, sortType: TaskSortTypes): List<Task> {
+
 		return when (sortType) {
 			TaskSortTypes.TITLE             -> allTasks.sortedBy { it.title }
 			TaskSortTypes.TITLE_REVERSED    -> allTasks.sortedByDescending { it.title }
@@ -163,7 +183,7 @@ class MainActivity : AppCompatActivity(), TaskListAdapter.ClickHandler {
 					taskDao.updateTask(task)
 					updateTitleBar()
 				}
-				val updatedList = getSortedTasks(taskDao, currentSortType)
+				val updatedList = getSortedTasks(taskDao.getAllTask(), currentSortType)
 				adapter.updateList(updatedList)
 				checkEmptyState(updatedList)
 				dialogTaskStatus.text = if (task.isCompleted) "Completed" else "Incomplete"

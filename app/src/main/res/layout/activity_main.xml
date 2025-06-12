@@ -15,39 +15,68 @@
 		android:background = "?attr/colorPrimary"
 		android:elevation = "10dp"
 		android:padding = "10dp"
-		android:textColor = "?attr/colorOnPrimary"
 		android:text = "Tasks"
 		android:textAlignment = "center"
+		android:textColor = "?attr/colorOnPrimary"
 		android:textAppearance = "@style/TextAppearance.Material3.TitleLarge"
 		app:layout_constraintEnd_toEndOf = "parent"
 		app:layout_constraintStart_toStartOf = "parent"
 		app:layout_constraintTop_toTopOf = "parent" />
 
-	<com.google.android.material.textfield.TextInputLayout
-		android:id = "@+id/sort_menu"
-		style = "@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+
+	<LinearLayout
+		android:id = "@+id/sort_menu_container"
 		android:layout_width = "match_parent"
 		android:layout_height = "wrap_content"
-		android:layout_margin = "10dp"
-		android:hint = "Sort By:"
+		android:baselineAligned = "false"
+		android:orientation = "vertical"
+		android:gravity = "center"
 		app:layout_constraintEnd_toEndOf = "parent"
 		app:layout_constraintStart_toStartOf = "parent"
 		app:layout_constraintTop_toBottomOf = "@id/top_app_bar">
 
-		<AutoCompleteTextView
-			android:id = "@+id/dropdown_sort_menu"
-			style = "@style/ThemeOverlay.Material3.AutoCompleteTextView.OutlinedBox"
+		<com.google.android.material.textfield.TextInputLayout
 			android:layout_width = "match_parent"
 			android:layout_height = "wrap_content"
-			android:clickable = "true"
-			android:contentDescription = "Sort by"
-			android:focusable = "false"
-			android:importantForAccessibility = "no"
-			android:inputType = "none"
-			android:text = "Sort by: Due Date"
-			android:textAppearance = "@style/TextAppearance.Material3.TitleLarge" />
+			android:id = "@+id/input_search"
+			android:layout_margin = "10dp"
 
-	</com.google.android.material.textfield.TextInputLayout>
+			android:hint = "Search:"
+			app:endIconDrawable = "@drawable/ic_close"
+			app:endIconMode = "clear_text">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:layout_width = "match_parent"
+				android:layout_height = "wrap_content"
+				android:textAppearance = "@style/TextAppearance.Material3.TitleMedium" />
+		</com.google.android.material.textfield.TextInputLayout>
+
+
+		<com.google.android.material.textfield.TextInputLayout
+			android:id = "@+id/sort_menu"
+			style = "@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+			android:layout_width = "match_parent"
+			android:layout_height = "wrap_content"
+			android:layout_margin = "10dp"
+			android:hint = "Sort By:">
+
+			<AutoCompleteTextView
+				android:id = "@+id/dropdown_sort_menu"
+				style = "@style/ThemeOverlay.Material3.AutoCompleteTextView.OutlinedBox"
+				android:layout_width = "match_parent"
+				android:layout_height = "wrap_content"
+				android:clickable = "true"
+				android:contentDescription = "Sort by"
+				android:focusable = "false"
+				android:importantForAccessibility = "no"
+				android:inputType = "none"
+				android:text = "Due Date"
+				android:textAppearance = "@style/TextAppearance.Material3.TitleMedium" />
+
+		</com.google.android.material.textfield.TextInputLayout>
+
+
+	</LinearLayout>
 
 
 	<com.google.android.material.card.MaterialCardView
@@ -58,7 +87,7 @@
 		app:layout_constraintBottom_toBottomOf = "parent"
 		app:layout_constraintEnd_toEndOf = "parent"
 		app:layout_constraintStart_toStartOf = "parent"
-		app:layout_constraintTop_toBottomOf = "@id/sort_menu">
+		app:layout_constraintTop_toBottomOf = "@id/sort_menu_container">
 
 		<LinearLayout
 			android:layout_width = "match_parent"
