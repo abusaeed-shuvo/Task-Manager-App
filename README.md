@@ -11,9 +11,7 @@ override fun onCreate() {
 super.onCreate()
 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
 DynamicColors.applyToActivitiesIfAvailable(this)
-}
-}
-}
+}}}
 ```
 
 If you get red underline in app level gradle script at `targetSdk = 36` don't worry the app will
