@@ -1,7 +1,9 @@
-# Task Manager App [ic_launcher.xml](app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml)
+# Task Manager App
 
 This project is made for `ES APP DEV 2404` course
 in [Creative IT Institute]("https://www.creativeitinstitute.com/).
+
+- App Icon: ![app_icon_24.png](app_icon_24.png)
 
 In order to use Material Dynamic color this code has been added:
 
@@ -15,14 +17,15 @@ DynamicColors.applyToActivitiesIfAvailable(this)
 ```
 
 If you get red underline in app level gradle script at `targetSdk = 36` don't worry the app will
-compile it is just a warning.
+compile it is just a warning not error.
 
 ## Features
 
-- Sqlite Database with Room persistence library and CRUDE Operation
-- Search and Sort Operation
-- Material 3 Design
-- Android 16 support
+- Sqlite Database with Room persistence library and CRUDE Operation.
+- Search and Sort Operation.
+- Proper Dark mode integration.
+- Material 3 Design.
+- Android 16 support.
 
 ## Installation
 
@@ -46,6 +49,11 @@ Congratulation it will open in Emulator or phone.
 2. Open the file from a file manager in your phone
 3. Give required permission to install the app
 4. Open the App
+
+## Screenshot of the app:
+
+- ![app1.png](app1.png)
+- ![app2.png](app2.png)
 
 ## Author
 
