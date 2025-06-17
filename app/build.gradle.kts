@@ -1,7 +1,8 @@
 plugins {
 	alias(libs.plugins.android.application)
 	alias(libs.plugins.kotlin.android)
-	kotlin("kapt")
+	alias(libs.plugins.kotlin.ksp)
+
 	id("kotlin-parcelize")
 }
 
@@ -21,7 +22,7 @@ android {
 
 	buildTypes {
 		release {
-			isMinifyEnabled = false
+			isMinifyEnabled = true
 			proguardFiles(
 				getDefaultProguardFile("proguard-android-optimize.txt"),
 				"proguard-rules.pro"
@@ -48,7 +49,11 @@ dependencies {
 	implementation(libs.androidx.constraintlayout)
 	implementation(libs.google.material)
 	implementation(libs.androidx.room.runtime)
-	kapt(libs.androidx.room.compiler)
+	implementation(libs.androidx.navigation.fragment.ktx)
+	implementation(libs.androidx.navigation.ui.ktx)
+	implementation(libs.androidx.navigation.dynamic.features.fragment)
+	implementation(libs.androidx.preference)
+	ksp(libs.androidx.room.compiler)
 	testImplementation(libs.junit)
 	androidTestImplementation(libs.androidx.junit)
 	androidTestImplementation(libs.androidx.espresso.core)

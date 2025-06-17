@@ -8,22 +8,32 @@
 	android:orientation = "vertical"
 	android:padding = "20dp">
 
-	<com.google.android.material.imageview.ShapeableImageView
-		android:id = "@+id/iv_status_icon"
-		android:layout_width = "wrap_content"
-		android:layout_height = "wrap_content"
-		android:layout_gravity = "center"
-		android:layout_margin = "4dp"
-		android:src = "@drawable/ic_timer" />
 
-	<TextView
-		android:id = "@+id/dialog_task_title"
+	<LinearLayout
 		android:layout_width = "match_parent"
 		android:layout_height = "wrap_content"
-		android:layout_marginVertical = "2dp"
-		android:text = "Title"
-		android:textAlignment = "center"
-		android:textAppearance = "@style/TextAppearance.Material3.TitleLarge" />
+		android:orientation = "horizontal">
+
+		<TextView
+			android:id = "@+id/dialog_task_title"
+			android:layout_width = "0dp"
+			android:layout_height = "wrap_content"
+			android:layout_marginVertical = "2dp"
+			android:layout_weight = "1"
+			android:maxLines = "1"
+			android:text = "Title"
+			android:textAlignment = "center"
+			android:textAppearance = "@style/TextAppearance.Material3.TitleLarge" />
+
+		<com.google.android.material.imageview.ShapeableImageView
+			android:id = "@+id/iv_status_icon"
+			android:layout_width = "wrap_content"
+			android:layout_height = "wrap_content"
+			android:layout_gravity = "center"
+			android:layout_margin = "4dp"
+			android:src = "@drawable/ic_timer" />
+
+	</LinearLayout>
 
 
 	<ScrollView
@@ -34,10 +44,10 @@
 
 		<TextView
 			android:id = "@+id/dialog_task_description"
-
 			android:layout_width = "match_parent"
 			android:layout_height = "wrap_content"
 			android:layout_marginVertical = "2dp"
+			android:maxLines = "3"
 			android:text = "Desc"
 			android:textAlignment = "viewStart"
 			android:textAppearance = "@style/TextAppearance.Material3.TitleMedium" />

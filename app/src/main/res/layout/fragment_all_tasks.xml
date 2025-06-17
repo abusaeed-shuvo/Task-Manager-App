@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+	xmlns:app = "http://schemas.android.com/apk/res-auto"
+	xmlns:tools = "http://schemas.android.com/tools"
+	android:layout_width = "match_parent"
+	android:layout_height = "match_parent"
+	tools:context = ".view.ui.alltasks.AllTasksFragment">
+
+	<com.google.android.material.textfield.TextInputLayout
+		android:id = "@+id/input_search"
+		android:layout_width = "match_parent"
+		android:layout_height = "wrap_content"
+		android:layout_margin = "10dp"
+		android:background = "?attr/colorSurface"
+		android:hint = "@string/search"
+		app:endIconDrawable = "@drawable/ic_close"
+		app:endIconMode = "clear_text"
+		app:layout_constraintEnd_toEndOf = "parent"
+		app:layout_constraintStart_toStartOf = "parent"
+		app:layout_constraintTop_toTopOf = "parent">
+
+		<com.google.android.material.textfield.TextInputEditText
+			android:layout_width = "match_parent"
+			android:layout_height = "wrap_content"
+			android:textAppearance = "@style/TextAppearance.Material3.TitleMedium" />
+	</com.google.android.material.textfield.TextInputLayout>
+
+
+	<com.google.android.material.textfield.TextInputLayout
+		android:id = "@+id/sort_menu"
+
+		app:layout_constraintEnd_toEndOf = "parent"
+		app:layout_constraintStart_toStartOf = "parent"
+		app:layout_constraintTop_toBottomOf = "@id/input_search"
+		style = "@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+		android:layout_width = "match_parent"
+		android:layout_height = "wrap_content"
+		android:layout_margin = "10dp"
+		android:hint = "@string/sort_by">
+
+		<AutoCompleteTextView
+			android:id = "@+id/dropdown_sort_menu"
+			style = "@style/ThemeOverlay.Material3.AutoCompleteTextView.OutlinedBox"
+			android:layout_width = "match_parent"
+			android:layout_height = "wrap_content"
+			android:clickable = "true"
+			android:focusable = "false"
+			android:hint = "@string/sort_by"
+			android:importantForAccessibility = "no"
+			android:inputType = "none"
+			android:textAppearance = "@style/TextAppearance.Material3.TitleMedium" />
+
+	</com.google.android.material.textfield.TextInputLayout>
+
+
+	<TextView
+		android:id = "@+id/tv_no_visible_data"
+		android:layout_width = "wrap_content"
+		android:layout_height = "wrap_content"
+		android:gravity = "center"
+		android:text = "@string/there_is_no_data_here"
+		android:textAlignment = "center"
+		android:textAppearance = "@style/TextAppearance.Material3.TitleMedium"
+		android:visibility = "gone"
+		app:layout_constraintBottom_toBottomOf = "parent"
+		app:layout_constraintEnd_toEndOf = "parent"
+		app:layout_constraintStart_toStartOf = "parent"
+		app:layout_constraintTop_toBottomOf = "@id/sort_menu" />
+
+
+	<androidx.recyclerview.widget.RecyclerView
+
+		android:id = "@+id/rcv_task_list"
+		android:layout_width = "match_parent"
+		android:layout_height = "0dp"
+		android:layout_margin = "10dp"
+		app:layoutManager = "androidx.recyclerview.widget.LinearLayoutManager"
+		app:layout_constraintBottom_toBottomOf = "parent"
+		app:layout_constraintEnd_toEndOf = "parent"
+		app:layout_constraintStart_toStartOf = "parent"
+		app:layout_constraintTop_toBottomOf = "@id/sort_menu"
+		tools:listitem = "@layout/item_list_task" />
+
+	<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+		android:id = "@+id/btn_add_or_delete_task"
+		android:layout_width = "wrap_content"
+		android:layout_height = "wrap_content"
+		android:layout_margin = "15dp"
+		android:text = "@string/add_task"
+		android:visibility = "visible"
+		app:icon = "@drawable/ic_add"
+		app:layout_constraintBottom_toBottomOf = "parent"
+		app:layout_constraintEnd_toEndOf = "parent" />
+
+	<com.google.android.material.card.MaterialCardView
+		android:id = "@+id/btn_task_container"
+		android:layout_width = "match_parent"
+		android:layout_height = "wrap_content"
+		android:layout_margin = "15dp"
+		android:visibility = "gone"
+		app:cardCornerRadius = "16dp"
+		app:cardElevation = "8dp"
+		app:layout_constraintBottom_toBottomOf = "parent">
+
+		<LinearLayout
+			android:layout_width = "match_parent"
+			android:layout_height = "wrap_content"
+			android:orientation = "horizontal">
+
+			<com.google.android.material.button.MaterialButton
+				android:id = "@+id/btn_delete_task"
+				android:layout_width = "0dp"
+				android:layout_height = "wrap_content"
+				android:layout_weight = "1"
+				android:text = "Delete"
+				app:icon = "@drawable/ic_delete" />
+
+			<com.google.android.material.button.MaterialButton
+				android:id = "@+id/btn_cancel_selection"
+				android:layout_width = "0dp"
+				android:layout_height = "wrap_content"
+				android:layout_weight = "1"
+				android:text = "Cancel"
+				app:icon = "@drawable/ic_close" />
+		</LinearLayout>
+	</com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

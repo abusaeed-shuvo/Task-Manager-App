@@ -5,121 +5,37 @@
 	android:id = "@+id/main"
 	android:layout_width = "match_parent"
 	android:layout_height = "match_parent"
-	tools:context = ".view.ui.MainActivity">
+	tools:context = ".MainActivity">
 
 
-	<com.google.android.material.textview.MaterialTextView
-		android:id = "@+id/top_app_bar"
+	<com.google.android.material.appbar.MaterialToolbar
+		android:id = "@+id/toolbar"
 		android:layout_width = "match_parent"
 		android:layout_height = "wrap_content"
 		android:background = "?attr/colorPrimary"
 		android:elevation = "10dp"
 		android:padding = "10dp"
-		android:textAlignment = "center"
-		android:textColor = "?attr/colorOnPrimary"
-		android:textAppearance = "@style/TextAppearance.Material3.TitleLarge"
 		app:layout_constraintEnd_toEndOf = "parent"
 		app:layout_constraintStart_toStartOf = "parent"
-		app:layout_constraintTop_toTopOf = "parent" />
+		app:layout_constraintTop_toTopOf = "parent"
+		app:title = "All Tasks"
+		app:titleCentered = "true"
+		app:titleTextAppearance = "@style/TextAppearance.Material3.TitleLarge"
+		app:titleTextColor = "?attr/colorOnPrimary" />
 
 
-	<LinearLayout
-		android:id = "@+id/sort_menu_container"
-		android:layout_width = "match_parent"
-		android:layout_height = "wrap_content"
-		android:baselineAligned = "false"
-		android:orientation = "vertical"
-		android:gravity = "center"
-		app:layout_constraintEnd_toEndOf = "parent"
-		app:layout_constraintStart_toStartOf = "parent"
-		app:layout_constraintTop_toBottomOf = "@id/top_app_bar">
-
-		<com.google.android.material.textfield.TextInputLayout
-			android:layout_width = "match_parent"
-			android:layout_height = "wrap_content"
-			android:id = "@+id/input_search"
-			android:layout_margin = "10dp"
-
-			android:hint = "@string/search"
-			app:endIconDrawable = "@drawable/ic_close"
-			app:endIconMode = "clear_text">
-
-			<com.google.android.material.textfield.TextInputEditText
-				android:layout_width = "match_parent"
-				android:layout_height = "wrap_content"
-				android:textAppearance = "@style/TextAppearance.Material3.TitleMedium" />
-		</com.google.android.material.textfield.TextInputLayout>
-
-
-		<com.google.android.material.textfield.TextInputLayout
-			android:id = "@+id/sort_menu"
-			style = "@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-			android:layout_width = "match_parent"
-			android:layout_height = "wrap_content"
-			android:layout_margin = "10dp"
-			android:hint = "@string/sort_by">
-
-			<AutoCompleteTextView
-				android:id = "@+id/dropdown_sort_menu"
-				style = "@style/ThemeOverlay.Material3.AutoCompleteTextView.OutlinedBox"
-				android:layout_width = "match_parent"
-				android:layout_height = "wrap_content"
-				android:clickable = "true"
-				android:hint = "@string/sort_by"
-				android:focusable = "false"
-				android:importantForAccessibility = "no"
-				android:inputType = "none"
-				android:textAppearance = "@style/TextAppearance.Material3.TitleMedium" />
-
-		</com.google.android.material.textfield.TextInputLayout>
-
-
-	</LinearLayout>
-
-
-	<com.google.android.material.card.MaterialCardView
+	<androidx.fragment.app.FragmentContainerView
+		android:id = "@+id/fragmentContainerView"
+		android:name = "androidx.navigation.fragment.NavHostFragment"
 		android:layout_width = "match_parent"
 		android:layout_height = "0dp"
-		android:layout_margin = "10dp"
-		app:cardCornerRadius = "16dp"
+		app:defaultNavHost = "true"
 		app:layout_constraintBottom_toBottomOf = "parent"
 		app:layout_constraintEnd_toEndOf = "parent"
 		app:layout_constraintStart_toStartOf = "parent"
-		app:layout_constraintTop_toBottomOf = "@id/sort_menu_container">
+		app:layout_constraintTop_toBottomOf = "@id/toolbar"
 
-		<LinearLayout
-			android:layout_width = "match_parent"
-			android:layout_height = "match_parent"
-			android:orientation = "vertical">
+		app:navGraph = "@navigation/nav_main" />
 
-			<TextView
-				android:id = "@+id/tv_no_visible_data"
-				android:layout_width = "match_parent"
-				android:layout_height = "match_parent"
-				android:gravity = "center"
-				android:text = "@string/there_is_no_data_here"
-				android:textAlignment = "center"
-				android:textAppearance = "@style/TextAppearance.Material3.TitleMedium"
-				android:visibility = "gone" />
-
-
-			<androidx.recyclerview.widget.RecyclerView
-				android:id = "@+id/rcv_task_list"
-				android:layout_width = "match_parent"
-				android:layout_height = "match_parent"
-				app:layoutManager = "androidx.recyclerview.widget.LinearLayoutManager"
-				tools:listitem = "@layout/item_list_task" />
-		</LinearLayout>
-	</com.google.android.material.card.MaterialCardView>
-
-	<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-		android:id = "@+id/btn_add_or_delete_task"
-		android:layout_width = "wrap_content"
-		android:layout_height = "wrap_content"
-		android:layout_margin = "15dp"
-		android:text = "@string/add_task"
-		app:icon = "@drawable/ic_add"
-		app:layout_constraintBottom_toBottomOf = "parent"
-		app:layout_constraintEnd_toEndOf = "parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,26 +2,23 @@ package com.example.taskmanagerapp.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.taskmanagerapp.AdditionalFunction.getFormattedTime
 import com.example.taskmanagerapp.databinding.ItemListTaskBinding
 import com.example.taskmanagerapp.model.data.Task
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 class TaskListAdapter(
 
-	var taskList: List<Task>, val clickHandler: ClickHandler
+	val onItemClick: (task: Task) -> Unit,
+	val onLongClick: (task: Task) -> Unit
+) : ListAdapter<Task, TaskListAdapter.TaskListViewHolder>(TaskDiffCallback()) {
 
-) : RecyclerView.Adapter<TaskListAdapter.TaskListViewHolder>() {
-	interface ClickHandler {
-		fun onItemClick(task: Task)
-		fun onLongClick(task: Task)
-	}
 
 	private val selectedTaskIds = mutableSetOf<Int>()
 
-	fun getSelectedTasks() = taskList.filter { selectedTaskIds.contains(it.id) }
+	fun getSelectedTasks() = currentList.filter { selectedTaskIds.contains(it.id) }
 
 	fun clearSelection() {
 		selectedTaskIds.clear()
@@ -38,26 +35,21 @@ class TaskListAdapter(
 	}
 
 	override fun onCreateViewHolder(
-		parent: ViewGroup, viewType: Int
+		parent: ViewGroup,
+		viewType: Int
 	): TaskListViewHolder {
 		return TaskListViewHolder(
 			ItemListTaskBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 		)
+
 	}
 
 	override fun onBindViewHolder(
-		holder: TaskListViewHolder, position: Int
+		holder: TaskListViewHolder,
+		position: Int
 	) {
-		val task = taskList[position]
+		val task = getItem(position)
 		holder.bind(task)
-	}
-
-	override fun getItemCount(): Int = taskList.size
-
-
-	fun updateList(newList: List<Task>) {
-		taskList = newList
-		notifyDataSetChanged()
 	}
 
 
@@ -69,27 +61,31 @@ class TaskListAdapter(
 			tvTaskDueDate.text = "Due: ${getFormattedTime(task.dueDate)}"
 			tvTaskStatus.text = if (task.isCompleted) "Completed" else "Incomplete"
 
-
-
 			root.isChecked = selectedTaskIds.contains(task.id)
 
-
-
 			root.setOnClickListener {
-				clickHandler.onItemClick(task)
+				onItemClick(task)
 			}
 			root.setOnLongClickListener {
-				clickHandler.onLongClick(task)
+				onLongClick(task)
 				true
 			}
 
 		}
 	}
 
-	private fun getFormattedTime(time: Long): String {
-		val dateFormat = "dd/MM/yyyy"
-		val instant = Instant.ofEpochMilli(time)
-		val zonedDateTime = instant.atZone(ZoneId.systemDefault())
-		return DateTimeFormatter.ofPattern(dateFormat).format(zonedDateTime)
+	class TaskDiffCallback : DiffUtil.ItemCallback<Task>() {
+		override fun areItemsTheSame(
+			oldItem: Task,
+			newItem: Task
+		): Boolean = oldItem.id == newItem.id
+
+		override fun areContentsTheSame(
+			oldItem: Task,
+			newItem: Task
+		): Boolean = oldItem == newItem
+
 	}
+
+
 }

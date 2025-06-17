@@ -2,48 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android = "http://schemas.android.com/apk/res/android"
 	xmlns:app = "http://schemas.android.com/apk/res-auto"
 	xmlns:tools = "http://schemas.android.com/tools"
-	android:id = "@+id/main"
 	android:layout_width = "match_parent"
 	android:layout_height = "match_parent"
 	android:fitsSystemWindows = "true"
-	tools:context = ".view.ui.AddTaskActivity">
-
-
-	<LinearLayout
-		android:id = "@+id/top_app_bar_container"
-		android:layout_width = "match_parent"
-		android:layout_height = "wrap_content"
-		android:background = "?attr/colorPrimary"
-		android:orientation = "horizontal"
-
-		app:layout_constraintEnd_toEndOf = "parent"
-		app:layout_constraintStart_toStartOf = "parent"
-		app:layout_constraintTop_toTopOf = "parent">
-
-		<ImageView
-			android:id = "@+id/top_app_bar_icon"
-			android:layout_width = "wrap_content"
-			android:layout_height = "wrap_content"
-			android:layout_gravity = "center"
-			android:clickable = "true"
-			android:contentDescription = "back button"
-			android:focusable = "true"
-			android:padding = "5dp"
-			android:src = "@drawable/ic_back" />
-
-		<com.google.android.material.textview.MaterialTextView
-			android:id = "@+id/top_app_bar"
-			android:layout_width = "match_parent"
-			android:layout_height = "wrap_content"
-			android:elevation = "10dp"
-			android:padding = "10dp"
-			android:text = "Add Task"
-
-			android:textAlignment = "center"
-			android:textAppearance = "@style/TextAppearance.Material3.TitleLarge"
-			android:textColor = "?attr/colorOnPrimary" />
-	</LinearLayout>
-
+	android:focusable = "true"
+	android:focusableInTouchMode = "true"
+	tools:context = ".view.ui.addtask.AddTaskFragment">
 
 	<ScrollView
 		android:id = "@+id/sv_form"
@@ -52,7 +16,7 @@
 		app:layout_constraintBottom_toTopOf = "@id/btn_save_or_update_task"
 		app:layout_constraintEnd_toEndOf = "parent"
 		app:layout_constraintStart_toStartOf = "parent"
-		app:layout_constraintTop_toBottomOf = "@id/top_app_bar_container">
+		app:layout_constraintTop_toTopOf = "parent">
 
 		<LinearLayout
 			android:layout_width = "match_parent"
@@ -60,61 +24,6 @@
 			android:layout_gravity = "center"
 			android:orientation = "vertical"
 			android:padding = "4dp">
-
-			<com.google.android.material.card.MaterialCardView
-				android:id = "@+id/card_tip"
-				android:layout_width = "match_parent"
-				android:layout_height = "wrap_content"
-				android:elevation = "4dp"
-				android:layout_margin = "8dp"
-				app:cardCornerRadius = "16dp"
-				app:layout_constraintBottom_toTopOf = "@id/sv_form"
-				app:layout_constraintEnd_toEndOf = "parent"
-				app:layout_constraintStart_toStartOf = "parent"
-				app:layout_constraintTop_toBottomOf = "@id/top_app_bar_container">
-
-				<LinearLayout
-					android:layout_width = "match_parent"
-					android:layout_height = "wrap_content"
-					android:orientation = "vertical"
-					android:padding = "16dp">
-
-					<com.google.android.material.textview.MaterialTextView
-						android:id = "@+id/tv_tip"
-						android:layout_width = "match_parent"
-						android:layout_height = "wrap_content"
-						android:text = "Tip goes here.."
-						android:textAppearance = "@style/TextAppearance.Material3.BodyMedium"
-						android:textColor = "?android:textColorPrimary" />
-
-					<LinearLayout
-						android:layout_width = "match_parent"
-						android:layout_height = "wrap_content"
-						android:layout_marginTop = "8dp"
-						android:gravity = "end"
-						android:orientation = "horizontal">
-
-						<com.google.android.material.button.MaterialButton
-							android:id = "@+id/btn_hide_tip"
-							style = "@style/Widget.Material3Expressive.Button.OutlinedButton"
-							android:layout_width = "wrap_content"
-							android:layout_height = "wrap_content"
-							android:text = "Hide"
-							android:textAppearance = "@style/TextAppearance.Material3.BodyMedium" />
-
-						<com.google.android.material.button.MaterialButton
-							android:id = "@+id/btn_next_tip"
-							style = "@style/Widget.Material3Expressive.Button.OutlinedButton"
-							android:layout_width = "wrap_content"
-							android:layout_height = "wrap_content"
-							android:layout_marginStart = "8dp"
-							android:text = "Next"
-
-							android:textAppearance = "@style/TextAppearance.Material3.BodyMedium" />
-					</LinearLayout>
-
-				</LinearLayout>
-			</com.google.android.material.card.MaterialCardView>
 
 
 			<com.google.android.material.textfield.TextInputLayout

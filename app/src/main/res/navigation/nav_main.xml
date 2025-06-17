@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android = "http://schemas.android.com/apk/res/android"
+	xmlns:app = "http://schemas.android.com/apk/res-auto"
+	xmlns:tools = "http://schemas.android.com/tools"
+	android:id = "@+id/nav_main"
+	app:startDestination = "@id/allTasksFragment">
+
+	<fragment
+		android:id = "@+id/allTasksFragment"
+		android:name = "com.example.taskmanagerapp.view.ui.alltasks.AllTasksFragment"
+		android:label = "All Tasks"
+		tools:layout = "@layout/fragment_all_tasks">
+		<action
+			android:id = "@+id/action_allTasksFragment_to_addTaskFragment"
+			app:destination = "@id/addTaskFragment" />
+		<action
+			android:id = "@+id/action_allTasksFragment_to_settingsFragment"
+			app:destination = "@id/settingsFragment" />
+	</fragment>
+	<fragment
+		android:id = "@+id/addTaskFragment"
+		android:name = "com.example.taskmanagerapp.view.ui.addtask.AddTaskFragment"
+		android:label = "Add Task"
+		tools:layout = "@layout/fragment_add_task">
+		<action
+			android:id = "@+id/action_addTaskFragment_to_allTasksFragment"
+			app:destination = "@id/allTasksFragment" />
+	</fragment>
+	<fragment
+		android:id = "@+id/settingsFragment"
+		android:name = "com.example.taskmanagerapp.view.ui.settings.SettingsFragment"
+		android:label = "Settings" />
+</navigation>
