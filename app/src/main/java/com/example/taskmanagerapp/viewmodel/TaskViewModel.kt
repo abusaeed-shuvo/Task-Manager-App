@@ -7,25 +7,40 @@ import androidx.lifecycle.viewModelScope
 import com.example.taskmanagerapp.model.data.Task
 import com.example.taskmanagerapp.model.database.TaskRepository
 import com.example.taskmanagerapp.model.enums.TaskSortTypes
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
 	private val _selectedTask = MutableLiveData<Task?>()
 	private val _sortType = MutableStateFlow(TaskSortTypes.DUE_DATE)
+	private val _isLoading = MutableLiveData(true)
+	private val _searchQuery = MutableStateFlow("")
 
 	val allTasks = repository.allTasks
 	val selectedTask = _selectedTask
+	val isLoading = _isLoading
 
-	val sortedTask = combine(allTasks, _sortType) { allTasks, sort ->
-
-		when (sort) {
+	val sortedTask = combine(allTasks, _sortType, _searchQuery) { allTasks, sort, query ->
+		val sorted = when (sort) {
 			TaskSortTypes.TITLE             -> allTasks.sortedBy { it.title }
 			TaskSortTypes.TITLE_REVERSED    -> allTasks.sortedByDescending { it.title }
 			TaskSortTypes.DUE_DATE          -> allTasks.sortedByDescending { it.dueDate }
 			TaskSortTypes.DUE_DATE_REVERSED -> allTasks.sortedBy { it.dueDate }
 		}
+
+		if (query.isBlank()) sorted else sorted.filter {
+			it.title.contains(query, ignoreCase = true) || it.description.contains(query, true)
+		}
+
+	}.onStart {
+		_isLoading.postValue(true)
+	}.onEach {
+		delay(300)
+		_isLoading.postValue(false)
 	}.asLiveData()
 
 
@@ -46,5 +61,8 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
 		_selectedTask.value = null
 	}
 
+	fun setSearchQuery(query: String) {
+		_searchQuery.value = query
+	}
 
 }

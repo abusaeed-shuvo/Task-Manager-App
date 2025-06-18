@@ -7,18 +7,23 @@ import android.os.Looper
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.NavController
 import androidx.navigation.NavHost
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.taskmanagerapp.databinding.ActivityMainBinding
+import com.example.taskmanagerapp.model.enums.TaskSortTypes
+import com.example.taskmanagerapp.view.ui.alltasks.AllTasksFragment
 import com.example.taskmanagerapp.viewmodel.TaskViewModel
 import com.example.taskmanagerapp.viewmodel.TaskViewModelFactory
 
@@ -52,11 +57,44 @@ class MainActivity : AppCompatActivity() {
 		setupActionBarWithNavController(navController, appBarConfiguration)
 		supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
 
+		binding.inputSearch.editText?.doAfterTextChanged { editable ->
+			val query = editable?.toString() ?: ""
+
+			getCurrentFragment()?.onSearchQueryChanged(query)
+
+		}
+
+		navController.addOnDestinationChangedListener { _, destination, _ ->
+			if (destination.id == R.id.allTasksFragment) {
+				binding.searchSortContainer.visibility = View.VISIBLE
+			} else {
+				binding.searchSortContainer.visibility = View.GONE
+			}
+		}
+
+		val sortOptions = TaskSortTypes.entries.map { it.value }
+		val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, sortOptions)
+		adapter.setAutofillOptions(TaskSortTypes.DUE_DATE.value)
+		binding.dropdownSortMenu.setAdapter(adapter)
+
+		binding.dropdownSortMenu.setOnItemClickListener { _, _, position, _ ->
+			val selectedSort = when (position) {
+				0    -> TaskSortTypes.DUE_DATE
+				1    -> TaskSortTypes.TITLE
+				2    -> TaskSortTypes.DUE_DATE_REVERSED
+				3    -> TaskSortTypes.TITLE_REVERSED
+				else -> TaskSortTypes.DUE_DATE
+			}
+			getCurrentFragment()?.onSortTypeChanged(selectedSort)
+		}
+
+
+
 		onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
 			override fun handleOnBackPressed() {
 				if (navController.currentDestination?.id == R.id.allTasksFragment) {
 					if (doubleBackPressedToExit) {
-						finish()
+						finishAffinity()
 					} else {
 						doubleBackPressedToExit = true
 						Toast.makeText(
@@ -74,6 +112,12 @@ class MainActivity : AppCompatActivity() {
 			}
 
 		})
+	}
+
+	private fun getCurrentFragment(): AllTasksFragment? {
+		val navHostFragment =
+			supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+		return navHostFragment?.childFragmentManager?.fragments?.firstOrNull() as? AllTasksFragment
 	}
 
 	override fun onSupportNavigateUp(): Boolean {

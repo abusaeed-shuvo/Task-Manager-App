@@ -2,13 +2,14 @@ package com.example.taskmanagerapp.view.ui.alltasks
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -39,6 +40,10 @@ class AllTasksFragment : Fragment() {
 		TaskViewModelFactory((requireActivity().application as MyApp).repository)
 	}
 
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		setHasOptionsMenu(true)
+	}
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -47,6 +52,7 @@ class AllTasksFragment : Fragment() {
 		// Inflate the layout for this fragment
 		return binding.root
 	}
+
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
@@ -74,6 +80,56 @@ class AllTasksFragment : Fragment() {
 		)
 	}
 
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+		inflater.inflate(
+			if (isSelectionMode) R.menu.task_selection_menu else R.menu.all_task_menu,
+			menu
+		)
+
+		super.onCreateOptionsMenu(menu, inflater)
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		return when (item.itemId) {
+			R.id.action_add_task        -> {
+				viewModel.clearSelection()
+				findNavController().navigate(R.id.action_allTasksFragment_to_addTaskFragment)
+
+				true
+			}
+
+			R.id.action_delete          -> {
+				val selected = adapter.getSelectedTasks()
+				val msg = "Delete ${selected.size} tasks?"
+				MaterialAlertDialogBuilder(requireContext()).setTitle("Delete:").setMessage(msg)
+					.setPositiveButton("Confirm") { _, _ ->
+						selected.forEach { viewModel.delete(it) }
+						adapter.clearSelection()
+						isSelectionMode = false
+						updateToolbarTitle()
+					}.setNegativeButton("Dismiss") { dialog, _ ->
+						adapter.clearSelection()
+						updateToolbarTitle()
+						dialog.dismiss()
+					}.show()
+
+				true
+			}
+
+			R.id.action_clear_selection -> {
+
+				adapter.clearSelection()
+				isSelectionMode = false
+				updateToolbarTitle()
+				true
+			}
+
+			else                        -> super.onOptionsItemSelected(item)
+
+		}
+
+	}
+
 	private fun setupAdapter() {
 		adapter = TaskListAdapter(onItemClick = { task ->
 			if (isSelectionMode) {
@@ -94,37 +150,22 @@ class AllTasksFragment : Fragment() {
 	}
 
 	private fun setupObservers() {
+		viewModel.isLoading.observe(viewLifecycleOwner) { loading ->
+			if (loading) {
+				binding.loadingIndicator.visibility = View.VISIBLE
+				binding.rcvTaskList.visibility = View.GONE
+			} else {
+				binding.loadingIndicator.visibility = View.GONE
+				binding.rcvTaskList.visibility = View.VISIBLE
+			}
+		}
 		viewModel.sortedTask.observe(viewLifecycleOwner) { tasks ->
 			adapter.submitList(tasks)
 			checkEmptyState(tasks)
 			updateToolbarTitle()
 		}
 
-		binding.inputSearch.editText?.doAfterTextChanged { query ->
-			val search = query?.trim()?.toString() ?: ""
-			val filtered = viewModel.sortedTask.value?.filter {
-				it.title.contains(search, ignoreCase = true) || it.description.contains(
-					search, ignoreCase = true
-				)
-			}.orEmpty()
-			adapter.submitList(filtered)
-			checkEmptyState(filtered)
-		}
-//		binding.rcvTaskList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//			override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//				super.onScrolled(recyclerView, dx, dy)
-//
-//
-//				if (dy > 10) {
-//					binding.inputSearch.fadeOut()
-//					binding.sortMenu.fadeOut()
-//				} else if (dy < -5) {
-//					binding.inputSearch.fadeIn()
-//					binding.sortMenu.fadeIn()
-//				}
-//
-//			}
-//		})
+
 	}
 
 	fun View.fadeIn() {
@@ -139,24 +180,16 @@ class AllTasksFragment : Fragment() {
 		}
 	}
 
+	fun onSearchQueryChanged(query: String) {
+		viewModel.setSearchQuery(query)
+	}
+
+	fun onSortTypeChanged(sortType: TaskSortTypes) {
+		viewModel.setSortType(sortType)
+	}
+
 
 	private fun setupUI() {
-		val sortOptions = TaskSortTypes.entries.map { it.value }
-		val dropdownView = binding.dropdownSortMenu
-
-
-		val dropdownAdapter = ArrayAdapter(
-			requireContext(), android.R.layout.simple_list_item_1, sortOptions
-		)
-
-		dropdownView.setAdapter(dropdownAdapter)
-		dropdownView.setText(TaskSortTypes.DUE_DATE.value, false)
-
-		binding.dropdownSortMenu.setOnItemClickListener { _, _, position, _ ->
-			val sortType = TaskSortTypes.entries[position]
-			viewModel.setSortType(sortType)
-		}
-
 
 
 		binding.btnAddOrDeleteTask.setOnClickListener {
@@ -195,6 +228,7 @@ class AllTasksFragment : Fragment() {
 		val selectedCount = adapter.getSelectedTasks().size
 		val activity = requireActivity() as AppCompatActivity
 
+		activity.invalidateMenu()
 		if (isSelectionMode && selectedCount > 0) {
 			activity.supportActionBar?.title = "$selectedCount Selected"
 			binding.btnAddOrDeleteTask.visibility = View.GONE
