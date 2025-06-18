@@ -79,14 +79,15 @@ class MainActivity : AppCompatActivity() {
 
 		binding.dropdownSortMenu.setOnItemClickListener { _, _, position, _ ->
 			val selectedSort = when (position) {
-				0    -> TaskSortTypes.DUE_DATE
-				1    -> TaskSortTypes.TITLE
-				2    -> TaskSortTypes.DUE_DATE_REVERSED
-				3    -> TaskSortTypes.TITLE_REVERSED
+				0    -> TaskSortTypes.TITLE
+				1    -> TaskSortTypes.TITLE_REVERSED
+				2    -> TaskSortTypes.DUE_DATE
+				3    -> TaskSortTypes.DUE_DATE_REVERSED
 				else -> TaskSortTypes.DUE_DATE
 			}
 			getCurrentFragment()?.onSortTypeChanged(selectedSort)
 		}
+
 
 
 

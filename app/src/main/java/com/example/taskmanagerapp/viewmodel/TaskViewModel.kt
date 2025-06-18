@@ -7,11 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.taskmanagerapp.model.data.Task
 import com.example.taskmanagerapp.model.database.TaskRepository
 import com.example.taskmanagerapp.model.enums.TaskSortTypes
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
@@ -25,6 +22,8 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
 	val isLoading = _isLoading
 
 	val sortedTask = combine(allTasks, _sortType, _searchQuery) { allTasks, sort, query ->
+		_isLoading.postValue(true)
+
 		val sorted = when (sort) {
 			TaskSortTypes.TITLE             -> allTasks.sortedBy { it.title }
 			TaskSortTypes.TITLE_REVERSED    -> allTasks.sortedByDescending { it.title }
@@ -35,12 +34,8 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
 		if (query.isBlank()) sorted else sorted.filter {
 			it.title.contains(query, ignoreCase = true) || it.description.contains(query, true)
 		}
-
-	}.onStart {
-		_isLoading.postValue(true)
-	}.onEach {
-		delay(300)
 		_isLoading.postValue(false)
+
 	}.asLiveData()
 
 
