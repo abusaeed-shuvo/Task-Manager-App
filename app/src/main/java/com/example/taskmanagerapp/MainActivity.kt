@@ -40,9 +40,23 @@ class MainActivity : AppCompatActivity() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+//		enableEdgeToEdge()
+
 		binding = ActivityMainBinding.inflate(layoutInflater)
 		setContentView(binding.root)
 		setSupportActionBar(binding.toolbar)
+//		ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+//			val statusBars = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+//			val navBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+//
+//			// Apply top padding to toolbar/app bar
+//			binding.appBarLayout.updatePadding(top = statusBars.top)
+//
+//			// Apply bottom padding if needed
+//			binding.root.updatePadding(bottom = navBars.bottom)
+//
+//			insets
+//		}
 
 		val navHostFragment =
 			supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHost

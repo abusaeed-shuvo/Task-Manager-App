@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -20,6 +21,7 @@ import com.example.taskmanagerapp.model.data.Task
 import com.example.taskmanagerapp.viewmodel.TaskViewModel
 import com.example.taskmanagerapp.viewmodel.TaskViewModelFactory
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
 
@@ -57,7 +59,28 @@ class AddTaskFragment : Fragment() {
 			}
 		}
 
+		requireActivity().onBackPressedDispatcher.addCallback(
+			viewLifecycleOwner,
+			object : OnBackPressedCallback(true) {
+				override fun handleOnBackPressed() {
 
+
+					val titleStr = binding.inputTaskTitle.editText?.text.toString().trim()
+					val descStr = binding.inputTaskDescription.editText?.text.toString().trim()
+
+
+
+					if (titleStr.isNotEmpty() || descStr.isNotEmpty()) {
+
+						MaterialAlertDialogBuilder(requireContext()).setMessage("Do you want to discard this task?")
+							.setPositiveButton("Discard") { _, _ ->
+								findNavController().popBackStack()
+							}.setNegativeButton("Cancel", null).show()
+					} else {
+						findNavController().popBackStack()
+					}
+				}
+			})
 	}
 
 
@@ -85,9 +108,8 @@ class AddTaskFragment : Fragment() {
 
 
 		btnPickDueDate.setOnClickListener {
-			val datePicker =
-				MaterialDatePicker.Builder.datePicker().setSelection(dateTime)
-					.setTitleText("Select Due Date").build()
+			val datePicker = MaterialDatePicker.Builder.datePicker().setSelection(dateTime)
+				.setTitleText("Select Due Date").build()
 
 			datePicker.addOnPositiveButtonClickListener { selectedDate ->
 				dateTime = selectedDate
@@ -101,8 +123,7 @@ class AddTaskFragment : Fragment() {
 			val descStr = inputTaskDescription.editText?.text.toString().trim()
 
 			if (titleStr.isEmpty() || descStr.isEmpty()) {
-				inputTaskTitle.error =
-					if (titleStr.isEmpty()) "Title cannot be empty!" else null
+				inputTaskTitle.error = if (titleStr.isEmpty()) "Title cannot be empty!" else null
 				inputTaskDescription.error =
 					if (descStr.isEmpty()) "Description cannot be empty!" else null
 				return@setOnClickListener
@@ -129,8 +150,7 @@ class AddTaskFragment : Fragment() {
 		}
 
 		inputTaskTitle.editText?.doOnTextChanged { input, _, _, _ ->
-			inputTaskTitle.error =
-				if (input.isNullOrEmpty()) "No blank entry allowed" else null
+			inputTaskTitle.error = if (input.isNullOrEmpty()) "No blank entry allowed" else null
 			inputTaskTitle.error =
 				if (input.toString().length > 20) "Title cannot be longer than 20 character" else null
 

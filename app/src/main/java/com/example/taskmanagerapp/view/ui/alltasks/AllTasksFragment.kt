@@ -61,22 +61,22 @@ class AllTasksFragment : Fragment() {
 		setupUI()
 
 
-		val callback = object : OnBackPressedCallback(true) {
-			override fun handleOnBackPressed() {
-				if (isSelectionMode) {
-					isSelectionMode = false
-					adapter.clearSelection()
-					updateToolbarTitle()
-				} else {
-					isEnabled = false
-					requireActivity().onBackPressedDispatcher.onBackPressed()
-				}
-			}
-		}
+
 		requireActivity().onBackPressedDispatcher.addCallback(
 			viewLifecycleOwner,
+			object : OnBackPressedCallback(true) {
+				override fun handleOnBackPressed() {
+					if (isSelectionMode) {
+						isSelectionMode = false
+						adapter.clearSelection()
+						updateToolbarTitle()
+					} else {
+						isEnabled = false
+						requireActivity().onBackPressedDispatcher.onBackPressed()
+					}
+				}
+			}
 
-			callback
 		)
 	}
 
@@ -91,28 +91,15 @@ class AllTasksFragment : Fragment() {
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 		return when (item.itemId) {
-			R.id.action_add_task        -> {
+			R.id.action_add_task -> {
 				viewModel.clearSelection()
 				findNavController().navigate(R.id.action_allTasksFragment_to_addTaskFragment)
 
 				true
 			}
 
-			R.id.action_delete          -> {
-				val selected = adapter.getSelectedTasks()
-				val msg = "Delete ${selected.size} tasks?"
-				MaterialAlertDialogBuilder(requireContext()).setTitle("Delete:").setMessage(msg)
-					.setPositiveButton("Confirm") { _, _ ->
-						selected.forEach { viewModel.delete(it) }
-						adapter.clearSelection()
-						isSelectionMode = false
-						updateToolbarTitle()
-					}.setNegativeButton("Dismiss") { dialog, _ ->
-						adapter.clearSelection()
-						updateToolbarTitle()
-						dialog.dismiss()
-					}.show()
-
+			R.id.action_delete -> {
+				deleteSelectedTasks()
 				true
 			}
 
@@ -124,7 +111,7 @@ class AllTasksFragment : Fragment() {
 				true
 			}
 
-			else                        -> super.onOptionsItemSelected(item)
+			else -> super.onOptionsItemSelected(item)
 
 		}
 
@@ -188,6 +175,21 @@ class AllTasksFragment : Fragment() {
 		viewModel.setSortType(sortType)
 	}
 
+	private fun deleteSelectedTasks() {
+		val selected = adapter.getSelectedTasks()
+		val msg = "Delete ${selected.size} tasks?"
+		MaterialAlertDialogBuilder(requireContext()).setMessage(msg)
+			.setPositiveButton("Confirm") { _, _ ->
+				selected.forEach { viewModel.delete(it) }
+				adapter.clearSelection()
+				isSelectionMode = false
+				updateToolbarTitle()
+			}.setNegativeButton("Dismiss") { dialog, _ ->
+				adapter.clearSelection()
+				updateToolbarTitle()
+				dialog.dismiss()
+			}.show()
+	}
 
 	private fun setupUI() {
 
@@ -205,19 +207,7 @@ class AllTasksFragment : Fragment() {
 		}
 
 		binding.btnDeleteTask.setOnClickListener {
-			val selected = adapter.getSelectedTasks()
-			val msg = "Delete ${selected.size} tasks?"
-			MaterialAlertDialogBuilder(requireContext()).setTitle("Delete:").setMessage(msg)
-				.setPositiveButton("Confirm") { _, _ ->
-					selected.forEach { viewModel.delete(it) }
-					adapter.clearSelection()
-					isSelectionMode = false
-					updateToolbarTitle()
-				}.setNegativeButton("Dismiss") { dialog, _ ->
-					adapter.clearSelection()
-					updateToolbarTitle()
-					dialog.dismiss()
-				}.show()
+			deleteSelectedTasks()
 
 		}
 
