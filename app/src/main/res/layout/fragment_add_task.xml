@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android = "http://schemas.android.com/apk/res/android"
 	xmlns:app = "http://schemas.android.com/apk/res-auto"
 	xmlns:tools = "http://schemas.android.com/tools"
 	android:layout_width = "match_parent"
@@ -12,7 +12,7 @@
 	<ScrollView
 		android:id = "@+id/sv_form"
 		android:layout_width = "match_parent"
-		android:layout_height = "0dp"
+		android:layout_height = "match_parent"
 		app:layout_constraintBottom_toTopOf = "@id/btn_save_or_update_task"
 		app:layout_constraintEnd_toEndOf = "parent"
 		app:layout_constraintStart_toStartOf = "parent"
@@ -81,13 +81,12 @@
 
 	<com.google.android.material.button.MaterialButton
 		android:id = "@+id/btn_save_or_update_task"
-		style = "@style/Widget.Material3Expressive.Button.ElevatedButton"
 		android:layout_width = "match_parent"
 		android:layout_height = "wrap_content"
-		android:layout_margin = "5dp"
+		app:icon = "@drawable/ic_add"
+		style = "@style/Widget.Material3Expressive.Button.ElevatedButton"
+		android:layout_margin = "15dp"
 		android:text = "Add Task"
-		app:layout_constraintBottom_toBottomOf = "parent"
-		app:layout_constraintEnd_toEndOf = "parent"
-		app:layout_constraintStart_toStartOf = "parent" />
+		android:layout_gravity = "bottom" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

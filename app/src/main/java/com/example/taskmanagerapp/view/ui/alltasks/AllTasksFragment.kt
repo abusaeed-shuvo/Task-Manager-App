@@ -7,9 +7,11 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -91,14 +93,14 @@ class AllTasksFragment : Fragment() {
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 		return when (item.itemId) {
-			R.id.action_add_task -> {
+			R.id.action_add_task        -> {
 				viewModel.clearSelection()
 				findNavController().navigate(R.id.action_allTasksFragment_to_addTaskFragment)
 
 				true
 			}
 
-			R.id.action_delete -> {
+			R.id.action_delete          -> {
 				deleteSelectedTasks()
 				true
 			}
@@ -111,7 +113,7 @@ class AllTasksFragment : Fragment() {
 				true
 			}
 
-			else -> super.onOptionsItemSelected(item)
+			else                        -> super.onOptionsItemSelected(item)
 
 		}
 
@@ -192,6 +194,31 @@ class AllTasksFragment : Fragment() {
 	}
 
 	private fun setupUI() {
+		binding.inputSearch.editText?.doAfterTextChanged { editable ->
+			val query = editable?.toString() ?: ""
+
+			onSearchQueryChanged(query)
+
+		}
+
+
+		val sortOptions = TaskSortTypes.entries.map { it.value }
+		val arrayAdapter =
+			ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, sortOptions)
+		arrayAdapter.setAutofillOptions(TaskSortTypes.DUE_DATE.value)
+		binding.dropdownSortMenu.setAdapter(arrayAdapter)
+
+		binding.dropdownSortMenu.setOnItemClickListener { _, _, position, _ ->
+			val selectedSort = when (position) {
+				0    -> TaskSortTypes.TITLE
+				1    -> TaskSortTypes.TITLE_REVERSED
+				2    -> TaskSortTypes.DUE_DATE
+				3    -> TaskSortTypes.DUE_DATE_REVERSED
+				else -> TaskSortTypes.DUE_DATE
+			}
+			onSortTypeChanged(selectedSort)
+		}
+
 
 
 		binding.btnAddOrDeleteTask.setOnClickListener {
